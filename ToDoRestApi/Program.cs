@@ -18,6 +18,7 @@ namespace ToDoRestApi
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<TodoContext>(opt =>
                 opt.UseInMemoryDatabase("TodoList"));
+            
 
             var app = builder.Build();
 

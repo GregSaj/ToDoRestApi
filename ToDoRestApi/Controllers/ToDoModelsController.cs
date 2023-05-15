@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using ToDoListDomain.Entities;
 using ToDoRestApi.Models;
 
 namespace ToDoRestApi.Controllers
@@ -86,13 +87,7 @@ namespace ToDoRestApi.Controllers
                 return NotFound($"ToDo with Id = {toDo.Id} not found");
             }
             else
-            {
-                //toDoToUpdate.Id = toDo.Id;
-                //toDoToUpdate.Name = toDo.Name;
-                //toDoToUpdate.Description = toDo.Description;
-                //toDoToUpdate.DueDate = toDo.DueDate;
-                //toDoToUpdate.Status = toDo.Status;
-
+            {               
                 _context.TodoItems.Update(toDo);
 
                 await _context.SaveChangesAsync();

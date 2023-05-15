@@ -1,4 +1,5 @@
-﻿namespace ToDoRestApi.Models
+﻿namespace ToDoListDomain.Entities
+
 {
     public class ToDoModel
     {
