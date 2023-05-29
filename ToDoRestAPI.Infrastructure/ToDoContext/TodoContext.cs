@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ToDoListDomain.Entities;
 
-namespace ToDoRestApi.Models
+namespace ToDoRestAPI.Infrastructure.ToDoContext
+
 {
     public class TodoContext: DbContext
     {

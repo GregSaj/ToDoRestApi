@@ -7,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ToDoListDomain.Entities;
-using ToDoRestApi.Models;
+using ToDoListDomain.RepositoryInterface;
+using ToDoRestAPI.Infrastructure.Repositories;
+using ToDoRestAPI.Infrastructure.ToDoContext;
 
 namespace ToDoRestApi.Controllers
 {
@@ -15,46 +17,45 @@ namespace ToDoRestApi.Controllers
     [Route("[controller]")]
     public class ToDoModelsController : Controller
     {
-        private readonly TodoContext _context;
 
-        public ToDoModelsController(TodoContext context)
+        private readonly IToDoRepository _repository;
+
+        public ToDoModelsController(IToDoRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: ToDoModels
         [HttpGet]
-        public async Task<ActionResult<List<ToDoModel>>> Index()
+        public async Task<IActionResult> GetAllItems()
         {
-            return await _context.TodoItems.ToListAsync();
+            var result = await _repository.GetAllItems();
+            if (result.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(result);
         }
 
         // GET: ToDoModels/Details/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ToDoModel>> Details(int? id)
+        public async Task<ActionResult<ToDoModel>> Details(int id)
         {
-            if (id == null || _context.TodoItems == null)
+            var toDo = await _repository.GetById(id);
+            if (toDo == null)
             {
                 return NotFound();
             }
 
-            var toDoModel = await _context.TodoItems
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (toDoModel == null)
-            {
-                return NotFound();
-            }
-
-            return toDoModel;
+            return toDo;
         }
 
 
         [HttpPost]
         public async Task<ActionResult<ToDoModel>> CreateToDo(ToDoModel addItem)
         {
-            var toAdd = await _context.TodoItems.AddAsync(addItem);
-            await _context.SaveChangesAsync();
-            return toAdd.Entity;
+            var toAdd = _repository.CreateToDo(addItem);
+            return await toAdd;
 
         }
 
@@ -62,17 +63,15 @@ namespace ToDoRestApi.Controllers
         public async Task<ActionResult<ToDoModel>> DeleteToDo(int? id)
         {
 
-            var result = await _context.TodoItems.FirstOrDefaultAsync(e => e.Id == id);
+            var result = await _repository.DeleteToDo(id);
 
             if (result == null)
             {
-                return NotFound($"ToDo with Id = {id} not found");
+                return NotFound($"ToDo with Id = {id} not found.");
             }
             else
             {
-                _context.TodoItems.Remove(result);
-                await _context.SaveChangesAsync();
-                return result;
+                return Ok($"ToDo with Id = {id} deleted.");
             }
         }
 
@@ -80,19 +79,15 @@ namespace ToDoRestApi.Controllers
         public async Task<ActionResult<ToDoModel>> UpdateToDo(ToDoModel toDo)
         {
 
-            var toDoToUpdate = await _context.TodoItems.FirstOrDefaultAsync(e => e.Id == toDo.Id);
+            var toDoToUpdate = await _repository.UpdateToDo(toDo);
 
             if (toDoToUpdate == null)
             {
                 return NotFound($"ToDo with Id = {toDo.Id} not found");
             }
             else
-            {               
-                _context.TodoItems.Update(toDo);
-
-                await _context.SaveChangesAsync();
-
-                return toDoToUpdate;
+            {
+                return Ok($"ToDo with Id = {toDo.Id} updated.");
             }
         }
 
@@ -100,7 +95,7 @@ namespace ToDoRestApi.Controllers
         public async Task<ActionResult<ToDoModel>> UpdateStatusToDo(int id, bool isCompleted)
         {
 
-            var toDoToUpdate = await _context.TodoItems.FirstOrDefaultAsync(e => e.Id == id);
+            var toDoToUpdate = await _repository.UpdateStatusToDo(id, isCompleted);
 
             if (toDoToUpdate == null)
             {
@@ -108,11 +103,7 @@ namespace ToDoRestApi.Controllers
             }
             else
             {
-                toDoToUpdate.Status = isCompleted;
-
-                await _context.SaveChangesAsync();
-
-                return toDoToUpdate;
+                return Ok($"Status ToDo with Id = {id} updated to {isCompleted}.");
             }
         }
     }

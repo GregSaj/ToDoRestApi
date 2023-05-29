@@ -1,6 +1,8 @@
 
 using Microsoft.EntityFrameworkCore;
-using ToDoRestApi.Models;
+using ToDoListDomain.RepositoryInterface;
+using ToDoRestAPI.Infrastructure.Repositories;
+using ToDoRestAPI.Infrastructure.ToDoContext;
 
 namespace ToDoRestApi
 {
@@ -18,6 +20,8 @@ namespace ToDoRestApi
             builder.Services.AddSwaggerGen();
             builder.Services.AddDbContext<TodoContext>(opt =>
                 opt.UseInMemoryDatabase("TodoList"));
+            builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
+            builder.Services.AddHttpClient();
             
 
             var app = builder.Build();
