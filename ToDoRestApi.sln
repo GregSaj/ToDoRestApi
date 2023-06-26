@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoListDomain", "ToDoListD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoRestAPI.Infrastructure", "ToDoRestAPI.Infrastructure\ToDoRestAPI.Infrastructure.csproj", "{D2BEEA57-6F68-487D-BFAA-B9E23FFC894F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToDoRestApi.Test", "ToDoRestApi.Test\ToDoRestApi.Test.csproj", "{1F93EAFF-9108-44A6-AE10-CFED718E4DD7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToDoRestApi.Test", "ToDoRestApi.Test\ToDoRestApi.Test.csproj", "{1F93EAFF-9108-44A6-AE10-CFED718E4DD7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
